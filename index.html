@@ -127,7 +127,7 @@
          * 内容区域样式
          * ==================== */
         .main-content {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 30px auto;
             width: 100%;
             padding: 0 20px;
@@ -174,6 +174,83 @@
             font-size: 1.8rem;
             color: #00b4ff;
             text-shadow: 0 0 8px rgba(0, 180, 255, 0.5);
+        }
+
+        /* ====================
+         * 案例列表样式
+         * ==================== */
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .case-card {
+            background: rgba(30, 30, 60, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 180, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 180, 255, 0.4);
+            border-color: rgba(0, 180, 255, 0.6);
+        }
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .case-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .case-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #00b4ff;
+            text-shadow: 0 0 10px rgba(0, 180, 255, 0.7);
+        }
+
+        .case-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .case-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .case-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.7);
         }
 
         /* ====================
@@ -319,6 +396,10 @@
                 width: 120px;
                 height: 120px;
             }
+            
+            .cases-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
         }
 
         @media (max-width: 480px) {
@@ -332,6 +413,10 @@
             
             .header {
                 padding: 30px 10px;
+            }
+            
+            .cases-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -361,6 +446,89 @@
         <div class="content">
             <div class="scan-line"></div>
             <h3><span class="rainbow-text">有趣的案例分享！</span></h3>
+            <!-- 可视化案例列表 -->
+            <!-- 案例卡片采用网格布局，每个卡片包含图标、标题、描述和链接 -->
+            <div class="cases-grid">
+                <!-- 案例1: 粒子爆炸艺术 - 交互式开始菜单 -->
+                <div class="case-card">
+                    <div class="case-icon">✨</div>
+                    <div class="case-title">粒子爆炸艺术</div>
+                    <p>交互式开始菜单特效</p>
+                    <a href="./Case1.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例2: 粒子艺术展示 - WebGL粒子系统 -->
+                <div class="case-card">
+                    <div class="case-icon">🎨</div>
+                    <div class="case-title">粒子艺术展示</div>
+                    <p>WebGL粒子系统动画</p>
+                    <a href="./Case2.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例3: 惊世骇俗的JavaScript -->
+                <div class="case-card">
+                    <div class="case-icon">💻</div>
+                    <div class="case-title">惊世骇俗JS</div>
+                    <p>JavaScript创意特效</p>
+                    <a href="./Case3.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例4: 惊世骇俗的互动代码 -->
+                <div class="case-card">
+                    <div class="case-icon">🌟</div>
+                    <div class="case-title">互动代码展示</div>
+                    <p>代码雨与黑客效果</p>
+                    <a href="./Case4.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例5: 惊世骇俗的交互体验 -->
+                <div class="case-card">
+                    <div class="case-icon">🌀</div>
+                    <div class="case-title">交互体验</div>
+                    <p>黑客帝国数字雨效果</p>
+                    <a href="./Case5.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例6: 粒子网络 -->
+                <div class="case-card">
+                    <div class="case-icon">🎆</div>
+                    <div class="case-title">粒子网络</div>
+                    <p>基于TailwindCSS的视觉奇观</p>
+                    <a href="./Case6.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例7: 终端模拟器 -->
+                <div class="case-card">
+                    <div class="case-icon">🎮</div>
+                    <div class="case-title">终端模拟器</div>
+                    <p>黑客终端特效展示</p>
+                    <a href="./Case7.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例8: 恶作剧JavaScript代码 -->
+                <div class="case-card">
+                    <div class="case-icon">🔮</div>
+                    <div class="case-title">恶作剧代码</div>
+                    <p>危险JavaScript示例</p>
+                    <a href="./Case8.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例9: 3D旋转特效 -->
+                <div class="case-card">
+                    <div class="case-icon">立方体</div>
+                    <div class="case-title">3D旋转特效</div>
+                    <p>CSS3 3D立方体动画</p>
+                    <a href="./Case9.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+                
+                <!-- 案例10: 惊世骇俗的JS代码 -->
+                <div class="case-card">
+                    <div class="case-icon">⚡</div>
+                    <div class="case-title">惊世骇俗JS代码</div>
+                    <p>终端故障效果展示</p>
+                    <a href="./Case10.html" class="case-link" target="_blank">查看案例</a>
+                </div>
+            </div>
         </div>
     </div>
 
