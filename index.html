@@ -4,22 +4,17 @@
     <!-- 网页元数据 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 网页标题 -->
     <title>天炸叼个人主页</title>
     <!-- 内联样式表，用于科技风格设计 -->
     <style>
-        /* ====================
-         * 重置默认样式
-         * ==================== */
+        /* 重置默认样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* ====================
-         * 页面整体样式
-         * ==================== */
+        /* 页面整体样式 */
         body {
             font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -31,9 +26,7 @@
             overflow-x: hidden;
         }
 
-        /* ====================
-         * 背景粒子效果
-         * ==================== */
+        /* 背景粒子效果容器 */
         .particles {
             position: fixed;
             top: 0;
@@ -44,6 +37,7 @@
             pointer-events: none;
         }
 
+        /* 单个粒子样式 */
         .particle {
             position: absolute;
             border-radius: 50%;
@@ -51,9 +45,7 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
-        /* ====================
-         * 头部样式
-         * ==================== */
+        /* 头部样式 */
         .header {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(10px);
@@ -67,7 +59,7 @@
             overflow: hidden;
         }
 
-        /* 发光边框效果 */
+        /* 发光边框动画效果 */
         .header::before {
             content: '';
             position: absolute;
@@ -84,18 +76,12 @@
         }
 
         @keyframes glowing-border {
-            0% {
-                background-position: 0 0;
-            }
-            50% {
-                background-position: 400% 0;
-            }
-            100% {
-                background-position: 0 0;
-            }
+            0% { background-position: 0 0; }
+            50% { background-position: 400% 0; }
+            100% { background-position: 0 0; }
         }
 
-        /* 头像样式 - 科技感圆形头像 */
+        /* 头像样式 */
         .avatar {
             width: 150px;
             height: 150px;
@@ -104,16 +90,15 @@
             border: 3px solid #00b4ff;
             box-shadow: 0 0 20px rgba(0, 180, 255, 0.7);
             transition: all 0.3s ease;
-            position: relative;
         }
 
-        /* 头像悬停效果 - 发光增强 */
+        /* 头像悬停效果 */
         .avatar:hover {
             transform: scale(1.1);
             box-shadow: 0 0 30px rgba(0, 180, 255, 0.9);
         }
 
-        /* 用户名样式 - 发光文字效果 */
+        /* 用户名样式 */
         .username {
             margin-top: 25px;
             font-size: 2.5rem;
@@ -123,9 +108,7 @@
             letter-spacing: 1px;
         }
 
-        /* ====================
-         * 内容区域样式
-         * ==================== */
+        /* 主要内容区域 */
         .main-content {
             max-width: 1200px;
             margin: 30px auto;
@@ -133,6 +116,7 @@
             padding: 0 20px;
         }
 
+        /* 内容卡片样式 */
         .content {
             background: rgba(15, 15, 35, 0.7);
             backdrop-filter: blur(10px);
@@ -147,11 +131,12 @@
             transition: transform 0.3s ease;
         }
 
+        /* 内容卡片悬停效果 */
         .content:hover {
             transform: translateY(-5px);
         }
 
-        /* 内容卡片发光效果 */
+        /* 内容卡片顶部装饰条 */
         .content::before {
             content: '';
             position: absolute;
@@ -176,20 +161,19 @@
             text-shadow: 0 0 8px rgba(0, 180, 255, 0.5);
         }
 
-        /* ====================
-         * 案例列表样式
-         * ==================== */
+        /* 案例网格布局 */
         .cases-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
             padding: 20px 0;
         }
 
+        /* 案例卡片样式 */
         .case-card {
             background: rgba(30, 30, 60, 0.8);
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 180, 255, 0.3);
@@ -198,12 +182,14 @@
             overflow: hidden;
         }
 
+        /* 案例卡片悬停效果 */
         .case-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0, 180, 255, 0.4);
             border-color: rgba(0, 180, 255, 0.6);
         }
 
+        /* 案例卡片顶部装饰条 */
         .case-card::before {
             content: '';
             position: absolute;
@@ -221,29 +207,40 @@
             transform: scaleX(1);
         }
 
+        /* 案例图标样式 */
         .case-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            margin-bottom: 10px;
             color: #00b4ff;
             text-shadow: 0 0 10px rgba(0, 180, 255, 0.7);
         }
 
+        /* 案例标题样式 */
         .case-title {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #fff;
         }
 
+        /* 案例描述样式 */
+        .case-card p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            color: #d1d1d1;
+            min-height: 36px;
+        }
+
+        /* 案例链接样式 */
         .case-link {
             display: inline-block;
             background: linear-gradient(45deg, #00dbde, #fc00ff);
             color: white;
-            padding: 8px 20px;
+            padding: 6px 15px;
             border-radius: 20px;
             text-decoration: none;
             font-weight: 500;
-            margin-top: 15px;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
@@ -253,16 +250,13 @@
             box-shadow: 0 0 15px rgba(0, 180, 255, 0.7);
         }
 
-        /* ====================
-         * 动画效果定义
-         * ==================== */
-        /* 数字动画 */
+        /* 数字字体样式 */
         .digital-font {
             font-family: 'Courier New', monospace;
             color: #00ffea;
         }
 
-        /* 扫描线效果 */
+        /* 扫描线动画效果 */
         .scan-line {
             position: absolute;
             top: 0;
@@ -275,27 +269,19 @@
         }
 
         @keyframes scan {
-            0% {
-                top: 0;
-            }
-            100% {
-                top: 100%;
-            }
+            0% { top: 0; }
+            100% { top: 100%; }
         }
 
-        /* 弹跳动画 */
+        /* 弹跳动画效果 */
         .bounce {
             display: inline-block;
             animation: bounce 2s infinite;
         }
 
         @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
 
         /* 彩虹文字效果 */
@@ -310,20 +296,12 @@
         }
 
         @keyframes rainbow {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* ====================
-         * 底部样式
-         * ==================== */
+        /* 页面底部样式 */
         .footer {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(10px);
@@ -338,7 +316,7 @@
             position: relative;
         }
 
-        /* 链接样式 - 科技蓝配色 */
+        /* 底部链接样式 */
         .footer a {
             color: #00b4ff;
             text-decoration: none;
@@ -347,7 +325,7 @@
             padding: 5px 10px;
         }
 
-        /* 链接悬停效果 - 下划线发光 */
+        /* 底部链接下划线效果 */
         .footer a::after {
             content: '';
             position: absolute;
@@ -369,11 +347,8 @@
             width: 100%;
         }
 
-        /* ====================
-         * 响应式设计
-         * ==================== */
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            /* 在小屏幕设备上的调整 */
             .header {
                 padding: 40px 15px;
                 margin: 10px;
@@ -398,7 +373,8 @@
             }
             
             .cases-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
             }
         }
 
@@ -416,7 +392,32 @@
             }
             
             .cases-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            
+            .case-card {
+                padding: 12px 10px;
+            }
+            
+            .case-icon {
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+            
+            .case-title {
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+            
+            .case-card p {
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+                min-height: 28px;
+            }
+            
+            .case-link {
+                padding: 5px 12px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -442,14 +443,13 @@
             <p>希望你能在这里找到有趣的内容！<span class="bounce">🚀</span></p>
         </div>
         
-        <!-- 彩色跳动文字展示区 -->
+        <!-- 案例列表展示区 -->
         <div class="content">
             <div class="scan-line"></div>
             <h3><span class="rainbow-text">有趣的案例分享！</span></h3>
-            <!-- 可视化案例列表 -->
-            <!-- 案例卡片采用网格布局，每个卡片包含图标、标题、描述和链接 -->
+            <!-- 案例卡片网格 -->
             <div class="cases-grid">
-                <!-- 案例1: 粒子爆炸艺术 - 交互式开始菜单 -->
+                <!-- 案例1: 粒子爆炸艺术 -->
                 <div class="case-card">
                     <div class="case-icon">✨</div>
                     <div class="case-title">粒子爆炸艺术</div>
@@ -457,7 +457,7 @@
                     <a href="./Case1.html" class="case-link" target="_blank">查看案例</a>
                 </div>
                 
-                <!-- 案例2: 粒子艺术展示 - WebGL粒子系统 -->
+                <!-- 案例2: 粒子艺术展示 -->
                 <div class="case-card">
                     <div class="case-icon">🎨</div>
                     <div class="case-title">粒子艺术展示</div>
@@ -535,7 +535,6 @@
     <!-- 页面底部：版权信息和友情链接 -->
     <div class="footer">
         <p>版权所有 © 2025 <span class="digital-font">天炸叼</span></p>
-        <!-- 友情链接在新标签页打开 -->
         <a href="https://chat.qwen.ai/" target="_blank">友情链接</a>
     </div>
 
@@ -544,7 +543,7 @@
         // 创建背景粒子效果
         document.addEventListener('DOMContentLoaded', function() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 100;
+            const particleCount = 300;
             const particles = [];
             
             // 记录鼠标位置
