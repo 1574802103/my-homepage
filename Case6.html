@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粒子网络 | 视觉奇观</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#ec4899',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 0 10px rgba(255,255,255,0.8);
+            }
+            .bg-gradient-animated {
+                background-size: 400% 400%;
+                animation: gradient 15s ease infinite;
+            }
+            @keyframes gradient {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 overflow-hidden font-inter text-white h-screen flex flex-col">
+    <!-- 顶部信息栏 -->
+    <header class="absolute top-0 left-0 w-full z-10 p-4 flex justify-between items-center bg-black/30 backdrop-blur-sm">
+        <div class="text-xl font-bold text-shadow">粒子网络 <span class="text-accent">|</span> 交互体验</div>
+        <div class="flex gap-4">
+            <button id="togglePause" class="px-3 py-1 rounded-full bg-primary/20 hover:bg-primary/40 transition-all duration-300">
+                <i class="fa fa-pause mr-1"></i> 暂停
+            </button>
+            <button id="toggleConnect" class="px-3 py-1 rounded-full bg-secondary/20 hover:bg-secondary/40 transition-all duration-300">
+                <i class="fa fa-link mr-1"></i> 连线
+            </button>
+        </div>
+    </header>
+
+    <!-- 主画布 -->
+    <canvas id="particleCanvas" class="absolute inset-0 w-full h-full"></canvas>
+
+    <!-- 中心信息 -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+        <h1 class="text-[clamp(2rem,5vw,4rem)] font-bold mb-4 text-shadow text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent bg-gradient-animated">
+            粒子宇宙
+        </h1>
+        <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-200 max-w-md text-center">
+            移动鼠标探索这个动态粒子网络，感受粒子间的神秘连接
+        </p>
+    </div>
+
+    <!-- 底部控制栏 -->
+    <footer class="absolute bottom-0 left-0 w-full z-10 p-4 flex flex-wrap justify-center gap-6 items-center bg-black/30 backdrop-blur-sm">
+        <div class="flex items-center gap-2">
+            <i class="fa fa-mouse-pointer text-primary"></i>
+            <span>移动鼠标与粒子交互</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <i class="fa fa-arrows-alt text-secondary"></i>
+            <span>拖动改变粒子密度</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <i class="fa fa-magic text-accent"></i>
+            <span>点击切换色彩模式</span>
+        </div>
+    </footer>
+
+    <script>
+        // 粒子类
+        class Particle {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.color = this.getRandomColor();
+                this.originalColor = this.color;
+                this.alpha = 1;
+            }
+            
+            // 获取随机颜色
+            getRandomColor() {
+                const colors = [
+                    'rgba(99, 102, 241, alpha)',   // primary
+                    'rgba(139, 92, 246, alpha)',   // secondary
+                    'rgba(236, 72, 153, alpha)'    // accent
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // 更新粒子位置
+            update(mouse, isPaused) {
+                if (isPaused) return;
+                
+                // 粒子自然移动
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // 边界检测
+                if (this.x < 0 || this.x > this.canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > this.canvas.height) this.speedY *= -1;
+                
+                // 鼠标交互 - 排斥效果
+                if (mouse && mouse.x && mouse.y) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const force = 200 / distance;
+                    
+                    if (distance < 100) {
+                        this.x -= dx / distance * force * 0.5;
+                        this.y -= dy / distance * force * 0.5;
+                        this.alpha = 0.8;
+                    } else {
+                        this.alpha = 1;
+                    }
+                }
+            }
+            
+            // 绘制粒子
+            draw() {
+                this.ctx.fillStyle = this.color.replace('alpha', this.alpha);
+                this.ctx.beginPath();
+                this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+            
+            // 连接附近的粒子
+            connect(particles, drawConnections) {
+                if (!drawConnections) return;
+                
+                particles.forEach(particle => {
+                    const dx = this.x - particle.x;
+                    const dy = this.y - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // 只连接距离近的粒子
+                    if (distance < 100) {
+                        // 连线透明度随距离变化
+                        const opacity = 1 - distance / 100;
+                        this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.2})`;
+                        this.ctx.lineWidth = 0.5;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(this.x, this.y);
+                        this.ctx.lineTo(particle.x, particle.y);
+                        this.ctx.stroke();
+                    }
+                });
+            }
+            
+            // 改变粒子颜色
+            changeColor() {
+                this.color = this.getRandomColor();
+            }
+        }
+
+        // 主动画类
+        class ParticleNetwork {
+            constructor() {
+                this.canvas = document.getElementById('particleCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: null, y: null };
+                this.isPaused = false;
+                this.drawConnections = true;
+                this.particleCount = 100;
+                this.init();
+            }
+            
+            // 初始化
+            init() {
+                this.resizeCanvas();
+                this.createParticles();
+                this.animate();
+                this.addEventListeners();
+            }
+            
+            // 调整画布大小
+            resizeCanvas() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            
+            // 创建粒子
+            createParticles() {
+                this.particles = [];
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push(new Particle(this.canvas));
+                }
+            }
+            
+            // 添加事件监听器
+            addEventListeners() {
+                // 窗口大小改变
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                });
+                
+                // 鼠标移动
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = e.x;
+                    this.mouse.y = e.y;
+                });
+                
+                // 鼠标离开
+                window.addEventListener('mouseout', () => {
+                    this.mouse.x = null;
+                    this.mouse.y = null;
+                });
+                
+                // 点击切换颜色
+                this.canvas.addEventListener('click', () => {
+                    this.particles.forEach(particle => particle.changeColor());
+                });
+                
+                // 拖动改变粒子数量
+                let isDragging = false;
+                this.canvas.addEventListener('mousedown', () => { isDragging = true; });
+                window.addEventListener('mouseup', () => { isDragging = false; });
+                window.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        // 根据鼠标Y位置调整粒子数量
+                        const newCount = Math.floor((1 - e.y / window.innerHeight) * 200) + 50;
+                        if (Math.abs(newCount - this.particleCount) > 10) {
+                            this.particleCount = newCount;
+                            this.createParticles();
+                        }
+                    }
+                });
+                
+                // 暂停按钮
+                document.getElementById('togglePause').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.isPaused = !this.isPaused;
+                    const btn = document.getElementById('togglePause');
+                    btn.innerHTML = this.isPaused 
+                        ? '<i class="fa fa-play mr-1"></i> 播放' 
+                        : '<i class="fa fa-pause mr-1"></i> 暂停';
+                });
+                
+                // 连线按钮
+                document.getElementById('toggleConnect').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.drawConnections = !this.drawConnections;
+                    const btn = document.getElementById('toggleConnect');
+                    btn.innerHTML = this.drawConnections 
+                        ? '<i class="fa fa-unlink mr-1"></i> 断开' 
+                        : '<i class="fa fa-link mr-1"></i> 连线';
+                });
+            }
+            
+            // 动画循环
+            animate() {
+                // 绘制渐变背景
+                const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+                gradient.addColorStop(0, '#0f172a');
+                gradient.addColorStop(1, '#1e293b');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // 更新和绘制粒子
+                for (let i = 0; i < this.particles.length; i++) {
+                    this.particles[i].update(this.mouse, this.isPaused);
+                    this.particles[i].draw();
+                    
+                    // 连接到其他粒子
+                    for (let j = i; j < this.particles.length; j++) {
+                        this.particles[i].connect([this.particles[j]], this.drawConnections);
+                    }
+                }
+                
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', () => {
+            new ParticleNetwork();
+        });
+    </script>
+</body>
+</html>

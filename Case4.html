@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>惊世骇俗的互动代码</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .code-block {
+            position: absolute;
+            color: #0f0;
+            font-size: 14px;
+            text-shadow: 0 0 5px #0f0;
+            pointer-events: none;
+            white-space: pre;
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            color: #fff;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #0f0;
+        }
+        
+        button {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 10px #0f0;
+        }
+        
+        .cursor {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: #fff;
+            animation: blink 1s infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <div class="controls">
+        <h3>惊世骇俗控制台</h3>
+        <button onclick="startCode()">开始代码生成</button>
+        <button onclick="stopCode()">停止代码</button>
+        <button onclick="reloadPage()">重新加载</button>
+        <br><br>
+        <div id="status">状态: 准备就绪</div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const status = document.getElementById('status');
+        let codeInterval;
+        let mousePosition = { x: 0, y: 0 };
+        let isGenerating = false;
+        let cursorElements = [];
+        
+        // 鼠标位置跟踪
+        document.addEventListener('mousemove', (e) => {
+            mousePosition.x = e.clientX;
+            mousePosition.y = e.clientY;
+            
+            // 创建鼠标轨迹效果
+            createMouseTrail();
+        });
+        
+        // 键盘事件监听
+        document.addEventListener('keydown', (e) => {
+            handleKeyPress(e);
+        });
+        
+        // 创建鼠标轨迹
+        function createMouseTrail() {
+            const trail = document.createElement('div');
+            trail.className = 'code-block';
+            trail.style.left = mousePosition.x + 'px';
+            trail.style.top = mousePosition.y + 'px';
+            trail.textContent = ` mouseX:${Math.floor(mousePosition.x)} mouseY:${Math.floor(mousePosition.y)}`;
+            
+            container.appendChild(trail);
+            
+            // 3秒后移除
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
+            }, 3000);
+        }
+        
+        // 处理键盘输入
+        function handleKeyPress(e) {
+            status.textContent = `状态: 按键 ${e.key} - 时间: ${new Date().toLocaleTimeString()}`;
+            
+            // 特殊按键功能
+            switch(e.key) {
+                case 'F1':
+                    startCode();
+                    break;
+                case 'F2':
+                    stopCode();
+                    break;
+                case 'F5':
+                    reloadPage();
+                    break;
+                case 'Escape':
+                    clearAll();
+                    break;
+                case ' ':
+                    createRandomCode();
+                    break;
+            }
+            
+            // 创建按键效果
+            createKeyPressEffect(e.key);
+        }
+        
+        // 创建按键视觉效果
+        function createKeyPressEffect(key) {
+            const effect = document.createElement('div');
+            effect.className = 'code-block';
+            effect.style.left = (mousePosition.x + Math.random() * 50 - 25) + 'px';
+            effect.style.top = (mousePosition.y + Math.random() * 50 - 25) + 'px';
+            effect.textContent = `KEY: ${key}`;
+            effect.style.color = getRandomColor();
+            effect.style.fontSize = (14 + Math.random() * 10) + 'px';
+            
+            container.appendChild(effect);
+            
+            // 动画效果
+            let opacity = 1;
+            const fade = setInterval(() => {
+                opacity -= 0.02;
+                effect.style.opacity = opacity;
+                if (opacity <= 0) {
+                    clearInterval(fade);
+                    if (effect.parentNode) {
+                        effect.parentNode.removeChild(effect);
+                    }
+                }
+            }, 50);
+        }
+        
+        // 开始代码生成
+        function startCode() {
+            if (isGenerating) return;
+            
+            isGenerating = true;
+            status.textContent = '状态: 代码生成中...';
+            
+            codeInterval = setInterval(() => {
+                createRandomCode();
+                updateCursor();
+            }, 100);
+            
+            // 每5秒创建一次大型代码块
+            setInterval(createLargeCodeBlock, 5000);
+        }
+        
+        // 停止代码生成
+        function stopCode() {
+            if (codeInterval) {
+                clearInterval(codeInterval);
+                isGenerating = false;
+                status.textContent = '状态: 代码已停止';
+            }
+        }
+        
+        // 创建随机代码块
+        function createRandomCode() {
+            const codeBlock = document.createElement('div');
+            codeBlock.className = 'code-block';
+            
+            // 随机位置
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            codeBlock.style.left = x + 'px';
+            codeBlock.style.top = y + 'px';
+            
+            // 随机代码内容
+            const codes = [
+                "console.log('Hello World');",
+                "function() { return Math.random(); }",
+                "if (true) { console.log('WTF'); }",
+                "var x = new Date().getTime();",
+                "document.body.innerHTML = 'HACKED';",
+                "while(true) { console.log('LOL'); }",
+                "alert('惊世骇俗!');",
+                "for(var i=0; i<1000000; i++) {}",
+                "function hack() { return 0xdeadbeef; }",
+                "var secret = 'secret';"
+            ];
+            
+            const randomCode = codes[Math.floor(Math.random() * codes.length)];
+            codeBlock.textContent = randomCode;
+            
+            // 随机颜色
+            codeBlock.style.color = getRandomColor();
+            
+            container.appendChild(codeBlock);
+            
+            // 5秒后移除
+            setTimeout(() => {
+                if (codeBlock.parentNode) {
+                    codeBlock.parentNode.removeChild(codeBlock);
+                }
+            }, 5000);
+        }
+        
+        // 创建大型代码块
+        function createLargeCodeBlock() {
+            const largeBlock = document.createElement('div');
+            largeBlock.className = 'code-block';
+            
+            // 居中显示
+            largeBlock.style.left = (window.innerWidth / 2 - 300) + 'px';
+            largeBlock.style.top = (window.innerHeight / 2 - 150) + 'px';
+            largeBlock.style.fontSize = '24px';
+            largeBlock.style.textAlign = 'center';
+            
+            const largeCode = [
+                "====================================",
+                "        惊世骇俗代码生成器         ",
+                "====================================",
+                "   警告：此代码可能对您的系统有害   ",
+                "  请勿在生产环境中运行此类代码      ",
+                "====================================",
+                "     状态: 正在生成恶意代码...     ",
+                "     进度: " + Math.floor(Math.random() * 100) + "%     ",
+                "===================================="
+            ].join('\n');
+            
+            largeBlock.textContent = largeCode;
+            largeBlock.style.color = '#ff0000';
+            largeBlock.style.textShadow = '0 0 10px #ff0000';
+            
+            container.appendChild(largeBlock);
+            
+            // 3秒后移除
+            setTimeout(() => {
+                if (largeBlock.parentNode) {
+                    largeBlock.parentNode.removeChild(largeBlock);
+                }
+            }, 3000);
+        }
+        
+        // 更新光标位置
+        function updateCursor() {
+            // 创建光标元素
+            const cursor = document.createElement('div');
+            cursor.className = 'cursor';
+            cursor.style.left = (mousePosition.x + 10) + 'px';
+            cursor.style.top = (mousePosition.y + 10) + 'px';
+            
+            container.appendChild(cursor);
+            
+            // 2秒后移除
+            setTimeout(() => {
+                if (cursor.parentNode) {
+                    cursor.parentNode.removeChild(cursor);
+                }
+            }, 2000);
+        }
+        
+        // 获取随机颜色
+        function getRandomColor() {
+            const colors = ['#0f0', '#ff0', '#f0f', '#0ff', '#f00', '#00f'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // 重新加载页面
+        function reloadPage() {
+            status.textContent = '状态: 正在重新加载...';
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+        
+        // 清空所有内容
+        function clearAll() {
+            container.innerHTML = '';
+            status.textContent = '状态: 已清空';
+        }
+        
+        // 初始化
+        window.addEventListener('load', () => {
+            status.textContent = '状态: 系统就绪 - 按F1开始代码生成';
+        });
+        
+        // 自动开始代码生成（可选）
+        setTimeout(() => {
+            if (!isGenerating) {
+                startCode();
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

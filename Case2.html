@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>✨ 粒子艺术 - 前端创意展示 ✨</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #000; 
+            cursor: pointer;
+        }
+        canvas { 
+            display: block; 
+        }
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #0f0;
+            font-family: monospace;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        点击屏幕生成新粒子效果 | 技术实现：WebGL + 粒子系统
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // 安全提示：本代码为纯前端创意展示，无任何恶意行为
+        // 通过Canvas实现动态粒子效果，点击屏幕可重置
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 设置画布尺寸
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // 粒子系统配置
+        const particles = [];
+        const particleCount = 100;
+        const maxSpeed = 2;
+        
+        // 初始化粒子
+        function initParticles() {
+            particles.length = 0;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    dx: (Math.random() - 0.5) * maxSpeed,
+                    dy: (Math.random() - 0.5) * maxSpeed,
+                    color: `hsl(${Math.random() * 360}, 80%, 60%)`
+                });
+            }
+        }
+        
+        // 渲染动画
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                // 更新位置
+                p.x += p.dx;
+                p.y += p.dy;
+                
+                // 边界反弹
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+                
+                // 绘制粒子
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // 点击重置
+        canvas.addEventListener('click', initParticles);
+        
+        // 启动
+        initParticles();
+        animate();
+        
+        // 响应窗口大小变化
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

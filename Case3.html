@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>惊世骇俗的JavaScript</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #0f0;
+            font-size: 12px;
+            text-shadow: 0 0 5px #0f0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">惊世骇俗的JavaScript代码演示</div>
+
+    <script>
+        // 获取画布和上下文
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 设置画布大小
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // 惊世骇俗的变量
+        let time = 0;
+        let particles = [];
+        let colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        let chaosLevel = 0;
+        
+        // 频繁更新的函数
+        function update() {
+            time++;
+            
+            // 混沌级别随时间增加
+            chaosLevel = Math.sin(time * 0.01) * 5 + 5;
+            
+            // 清除画布（使用渐变背景）
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, `hsl(${time % 360}, 100%, 50%)`);
+            gradient.addColorStop(1, `hsl(${(time + 180) % 360}, 100%, 25%)`);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 创建粒子
+            if (Math.random() < 0.3) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 10 + 2,
+                    speedX: (Math.random() - 0.5) * chaosLevel,
+                    speedY: (Math.random() - 0.5) * chaosLevel,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 100
+                });
+            }
+            
+            // 更新和绘制粒子
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                // 更新位置
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                // 重力效果
+                p.speedY += 0.1;
+                
+                // 摩擦力
+                p.speedX *= 0.98;
+                p.speedY *= 0.98;
+                
+                // 更新生命值
+                p.life--;
+                
+                // 绘制粒子
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life / 100;
+                ctx.fill();
+                
+                // 删除死亡粒子
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // 绘制核心混沌效应
+            drawChaosEffect();
+            
+            // 每隔一定时间改变一次视觉效果
+            if (time % 100 === 0) {
+                document.body.style.background = `hsl(${time % 360}, 100%, 50%)`;
+            }
+            
+            requestAnimationFrame(update);
+        }
+        
+        // 惊世骇俗的混沌效果
+        function drawChaosEffect() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // 绘制多个旋转的几何图形
+            for (let i = 0; i < 10; i++) {
+                const angle = time * 0.02 + i * 0.6;
+                const radius = 50 + Math.sin(time * 0.01 + i) * 30;
+                
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle);
+                
+                // 绘制多边形
+                ctx.beginPath();
+                for (let j = 0; j < 6; j++) {
+                    const x = Math.cos((j / 3) * Math.PI) * radius;
+                    const y = Math.sin((j / 3) * Math.PI) * radius;
+                    if (j === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                
+                // 渐变填充
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+                gradient.addColorStop(0, `hsla(${(time + i * 36) % 360}, 100%, 50%, 0.8)`);
+                gradient.addColorStop(1, `hsla(${(time + i * 36 + 180) % 360}, 100%, 25%, 0.2)`);
+                
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // 边框
+                ctx.strokeStyle = `hsl(${(time + i * 36 + 120) % 360}, 100%, 75%)`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
+            // 绘制随机线条
+            for (let i = 0; i < 50; i++) {
+                const x1 = Math.sin(time * 0.01 + i) * canvas.width / 2 + canvas.width / 2;
+                const y1 = Math.cos(time * 0.01 + i) * canvas.height / 2 + canvas.height / 2;
+                const x2 = Math.sin(time * 0.01 + i + 1) * canvas.width / 2 + canvas.width / 2;
+                const y2 = Math.cos(time * 0.01 + i + 1) * canvas.height / 2 + canvas.height / 2;
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = `hsla(${(time + i * 72) % 360}, 100%, 50%, 0.3)`;
+                ctx.lineWidth = Math.sin(time * 0.01 + i) * 2 + 2;
+                ctx.stroke();
+            }
+        }
+        
+        // 响应窗口大小变化
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // 开始动画
+        update();
+        
+        // 惊世骇俗的控制台输出
+        console.log("%c⚠️ 惊世骇俗的JavaScript代码正在运行 ⚠️", "color: #ff0000; font-size: 20px; text-shadow: 0 0 10px #ff0000;");
+        console.log("你看到的每一帧都是由数学公式计算出来的混沌艺术");
+        console.log("请珍惜这视觉盛宴，因为代码会不断改变");
+        console.log("警告：长时间观看可能导致视觉疲劳和精神恍惚");
+    </script>
+</body>
+</html>

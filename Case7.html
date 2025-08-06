@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>惊世骇俗的JavaScript</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        #terminal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+        .output {
+            margin: 5px 0;
+            text-shadow: 0 0 5px #0f0;
+        }
+        .warning {
+            color: #f00;
+            text-shadow: 0 0 10px #f00;
+        }
+        .success {
+            color: #0ff;
+            text-shadow: 0 0 10px #0ff;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const output = (text, className = '') => {
+            const div = document.createElement('div');
+            div.className = `output ${className}`;
+            div.textContent = text;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        };
+
+        // 令人震惊的代码开始
+        output('正在初始化惊世骇俗系统...', 'warning');
+        output('警告：此代码可能对您的心理造成不可逆影响', 'warning');
+
+        // 自引用递归函数
+        const selfReferencing = () => {
+            const code = `selfReferencing()`;
+            return eval(code);
+        };
+
+        // 创建无限循环
+        let count = 0;
+        const infiniteLoop = setInterval(() => {
+            if (count > 100) clearInterval(infiniteLoop);
+            output(`循环计数: ${count++}`, 'success');
+        }, 10);
+
+        // 恐怖的变量污染
+        const dangerousVariables = ['__proto__', 'constructor', 'prototype'];
+        dangerousVariables.forEach(varName => {
+            try {
+                window[varName] = () => output(`${varName} 已被污染`, 'warning');
+                output(`变量 ${varName} 已被篡改`, 'warning');
+            } catch (e) {
+                output(`无法篡改 ${varName}`, 'warning');
+            }
+        });
+
+        // 神秘的函数
+        const mysteriousFunction = new Function('return function() { return "我是神秘函数"; }')();
+        output(`神秘函数返回: ${mysteriousFunction()}`, 'success');
+
+        // 隐藏的代码执行
+        setTimeout(() => {
+            try {
+                eval('console.log("隐藏的代码被执行了！")');
+                output('隐藏代码执行成功', 'success');
+            } catch (e) {
+                output('隐藏代码执行失败', 'warning');
+            }
+        }, 1000);
+
+        // 创建一个看似无害但实际危险的对象
+        const dangerousObject = new Proxy({}, {
+            get(target, prop) {
+                output(`访问属性: ${prop}`, 'warning');
+                return target[prop];
+            },
+            set(target, prop, value) {
+                output(`设置属性: ${prop} = ${value}`, 'warning');
+                target[prop] = value;
+                return true;
+            }
+        });
+
+        // 恐怖的数组操作
+        const scaryArray = [1, 2, 3];
+        scaryArray.forEach((item, index) => {
+            output(`数组元素 ${index}: ${item}`, 'success');
+        });
+
+        // 真正的惊世骇俗：修改浏览器原生方法
+        const originalLog = console.log;
+        console.log = function(...args) {
+            output(`控制台输出: ${args.join(' ')}`, 'warning');
+            return originalLog.apply(console, args);
+        };
+
+        // 最后一行
+        output('系统已完全感染', 'success');
+        output('警告：您已经无法回头了', 'warning');
+
+    </script>
+</body>
+</html>

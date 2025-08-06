@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>惊世骇俗的JavaScript代码</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        #output {
+            white-space: pre-wrap;
+            margin: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="output"></div>
+
+    <script>
+        // 惊世骇俗的代码开始
+        const output = document.getElementById('output');
+        
+        // 1. 无限递归
+        function infiniteRecursion() {
+            return infiniteRecursion();
+        }
+        
+        // 2. 内存泄漏陷阱
+        const leaks = [];
+        setInterval(() => {
+            leaks.push(new Array(1000000).fill('MEMORY LEAK'));
+        }, 100);
+        
+        // 3. 恶意DOM操作
+        function evilDOM() {
+            const evil = document.createElement('div');
+            evil.innerHTML = 'HACKED!';
+            evil.style.position = 'fixed';
+            evil.style.top = Math.random() * window.innerHeight + 'px';
+            evil.style.left = Math.random() * window.innerWidth + 'px';
+            evil.style.fontSize = (Math.random() * 100 + 20) + 'px';
+            document.body.appendChild(evil);
+        }
+        
+        // 4. 网络请求风暴
+        function networkStorm() {
+            for (let i = 0; i < 1000; i++) {
+                fetch('https://httpbin.org/delay/1');
+            }
+        }
+        
+        // 5. 时间戳陷阱
+        const start = Date.now();
+        setInterval(() => {
+            if (Date.now() - start > 10000) {
+                output.innerHTML += '时间停止了...\n';
+                setTimeout(() => {
+                    throw new Error('时间悖论: ' + Date.now());
+                }, 100);
+            }
+        }, 1000);
+        
+        // 6. 变量污染
+        function polluteVariables() {
+            for (let i = 0; i < 1000; i++) {
+                window['var' + i] = new Array(1000).fill('polluted');
+            }
+        }
+        
+        // 7. 屏幕闪烁
+        setInterval(() => {
+            document.body.style.backgroundColor = 
+                '#' + Math.floor(Math.random()*16777215).toString(16);
+        }, 50);
+        
+        // 8. 执行恶意代码
+        const evilCode = `
+            console.log('执行恶意代码...');
+            setInterval(() => {
+                output.innerHTML += '危险警告: ' + Math.random() + '\\n';
+            }, 100);
+        `;
+        
+        // 9. 重写原型链
+        Object.prototype.__proto__ = null;
+        
+        // 10. 最终的警告
+        setTimeout(() => {
+            output.innerHTML += '警告: 这是惊世骇俗的代码，会破坏浏览器！\\n';
+            output.innerHTML += '请立即关闭此页面！\\n';
+            throw new Error('危险代码执行完毕');
+        }, 5000);
+        
+        // 执行所有恶意操作
+        setInterval(() => {
+            evilDOM();
+            networkStorm();
+            polluteVariables();
+        }, 1000);
+    </script>
+</body>
+</html>

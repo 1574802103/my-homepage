@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>炫酷3D旋转特效</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .container {
+            perspective: 1000px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cube {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            animation: rotate 10s infinite linear;
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 100, 255, 0.7);
+            border: 2px solid rgba(0, 200, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.7);
+        }
+
+        .front {
+            transform: translateZ(100px);
+            background: rgba(255, 0, 100, 0.7);
+        }
+
+        .back {
+            transform: rotateY(180deg) translateZ(100px);
+            background: rgba(0, 255, 100, 0.7);
+        }
+
+        .right {
+            transform: rotateY(90deg) translateZ(100px);
+            background: rgba(100, 0, 255, 0.7);
+        }
+
+        .left {
+            transform: rotateY(-90deg) translateZ(100px);
+            background: rgba(255, 255, 0, 0.7);
+        }
+
+        .top {
+            transform: rotateX(90deg) translateZ(100px);
+            background: rgba(0, 255, 255, 0.7);
+        }
+
+        .bottom {
+            transform: rotateX(-90deg) translateZ(100px);
+            background: rgba(255, 0, 255, 0.7);
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+            }
+            100% {
+                transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+            }
+        }
+
+        .title {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.9);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 200, 255, 0.7);
+            box-shadow: 0 0 10px rgba(0, 200, 255, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="title">3D立方体旋转特效</div>
+    
+    <div class="container">
+        <div class="cube">
+            <div class="face front">Front</div>
+            <div class="face back">Back</div>
+            <div class="face right">Right</div>
+            <div class="face left">Left</div>
+            <div class="face top">Top</div>
+            <div class="face bottom">Bottom</div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        CSS3 3D变换 + JavaScript粒子系统
+    </div>
+    
+    <div class="particles" id="particles"></div>
+
+    <script>
+        // 创建背景粒子效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            const particles = [];
+            
+            // 创建粒子
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机粒子大小
+                const size = Math.random() * 5 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // 随机粒子位置
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                
+                // 随机粒子颜色
+                const colors = [
+                    'rgba(0, 200, 255, 0.7)',
+                    'rgba(128, 0, 255, 0.7)',
+                    'rgba(0, 255, 200, 0.7)',
+                    'rgba(255, 0, 128, 0.7)'
+                ];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 10px ${color}`;
+                
+                // 添加粒子到容器
+                particlesContainer.appendChild(particle);
+                
+                // 存储粒子信息
+                particles.push({
+                    element: particle,
+                    x: posX,
+                    y: posY,
+                    size: size,
+                    speed: Math.random() * 0.05 + 0.01,
+                    angle: Math.random() * Math.PI * 2,
+                    // 粒子自身运动轨迹参数
+                    orbitRadius: Math.random() * 30 + 10,
+                    orbitSpeed: Math.random() * 0.02 + 0.005,
+                    orbitAngle: Math.random() * Math.PI * 2
+                });
+            }
+            
+            // 粒子动画循环
+            function animateParticles() {
+                particles.forEach(particle => {
+                    // 更新粒子轨道角度
+                    particle.orbitAngle += particle.orbitSpeed;
+                    
+                    // 计算轨道偏移
+                    const orbitX = Math.cos(particle.orbitAngle) * particle.orbitRadius;
+                    const orbitY = Math.sin(particle.orbitAngle) * particle.orbitRadius;
+                    
+                    // 粒子目标位置（轨道位置）
+                    const targetX = particle.x + orbitX;
+                    const targetY = particle.y + orbitY;
+                    
+                    // 平滑移动到目标位置
+                    particle.x += (targetX - particle.x) * particle.speed;
+                    particle.y += (targetY - particle.y) * particle.speed;
+                    
+                    // 更新粒子位置
+                    particle.element.style.left = `${particle.x}px`;
+                    particle.element.style.top = `${particle.y}px`;
+                });
+                
+                requestAnimationFrame(animateParticles);
+            }
+            
+            // 开始动画循环
+            animateParticles();
+        });
+    </script>
+</body>
+</html>

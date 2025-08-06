@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粒子爆炸艺术 - 交互式开始菜单</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #start-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            z-index: 100;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 
+                         0 0 20px rgba(255, 255, 255, 0.2),
+                         0 0 30px rgba(255, 255, 255, 0.1);
+            background: linear-gradient(to right, #4cc9f0, #00f3fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            color: #a0c4ff;
+            max-width: 80%;
+            line-height: 1.6;
+            text-shadow: 0 0 5px rgba(160, 196, 255, 0.3);
+        }
+
+        #start-button {
+            background: linear-gradient(to right, #4cc9f0, #00f3fe);
+            color: #0a192f;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(76, 201, 240, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        #start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(76, 201, 240, 0.6);
+            background: linear-gradient(to right, #34b7e7, #00e0f0);
+        }
+
+        #start-button:active {
+            transform: translateY(1px);
+        }
+
+        #start-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        #start-button:hover::after {
+            transform: scale(1);
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            color: #a0c4ff;
+            font-size: 1.1rem;
+            opacity: 0.7;
+            text-align: center;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle-count {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 25, 47, 0.7);
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #4cc9f0;
+            box-shadow: 0 5px 20px rgba(0, 243, 254, 0.3);
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .particle-count::before {
+            content: "粒子数量: ";
+            margin-right: 10px;
+        }
+
+        .particle-count span {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00f3fe;
+            text-shadow: 0 0 10px rgba(0, 243, 254, 0.7);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+            100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            color: #a0c4ff;
+            font-size: 1.1rem;
+            opacity: 0.7;
+            text-align: center;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .instructions span {
+            color: #4cc9f0;
+            text-shadow: 0 0 5px rgba(76, 201, 240, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            #start-button {
+                padding: 1rem 2.5rem;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="start-menu">
+        <h1 class="title">粒子爆炸艺术</h1>
+        <p class="subtitle">点击屏幕开始，每次点击屏幕将生成更多粒子，创造更震撼的视觉效果</p>
+        <button id="start-button">开始体验</button>
+        <div class="instructions">
+            <span>点击屏幕</span> 生成更多粒子 | <span>按住屏幕</span> 持续生成
+        </div>
+    </div>
+    
+    <div class="particle-count">
+        <span id="particle-count">0</span>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const startMenu = document.getElementById('start-menu');
+            const startButton = document.getElementById('start-button');
+            const particleCountElement = document.getElementById('particle-count');
+            
+            // 设置画布尺寸
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // 粒子系统
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speed = Math.random() * 1.5 + 0.5;
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                }
+                
+                update() {
+                    this.x += Math.cos(this.angle) * this.speed;
+                    this.y += Math.sin(this.angle) * this.speed;
+                    
+                    // 边界反弹
+                    if (this.x < 0 || this.x > canvas.width) {
+                        this.angle = Math.PI - this.angle;
+                    }
+                    if (this.y < 0 || this.y > canvas.height) {
+                        this.angle = -this.angle;
+                    }
+                }
+                
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+            
+            // 初始化粒子系统
+            let particles = [];
+            let particleCount = 0;
+            let isMouseDown = false;
+            let lastClickTime = 0;
+            const clickInterval = 200; // 200ms 间隔
+            
+            // 添加粒子
+            function addParticles(count) {
+                for (let i = 0; i < count; i++) {
+                    particles.push(new Particle());
+                }
+                particleCount += count;
+                particleCountElement.textContent = particleCount;
+            }
+            
+            // 更新粒子
+            function updateParticles() {
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                }
+            }
+            
+            // 绘制粒子
+            function drawParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制背景
+                ctx.fillStyle = 'rgba(10, 25, 47, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制粒子
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].draw();
+                }
+            }
+            
+            // 动画循环
+            function animate() {
+                requestAnimationFrame(animate);
+                updateParticles();
+                drawParticles();
+            }
+            
+            // 点击事件
+            function handleClick(e) {
+                const now = Date.now();
+                if (now - lastClickTime > clickInterval) {
+                    addParticles(100); // 每次点击添加100个粒子
+                    lastClickTime = now;
+                }
+            }
+            
+            // 鼠标按下事件
+            function handleMouseDown() {
+                isMouseDown = true;
+                const interval = setInterval(() => {
+                    if (isMouseDown) {
+                        addParticles(50); // 持续生成50个粒子
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
+            
+            // 鼠标松开事件
+            function handleMouseUp() {
+                isMouseDown = false;
+            }
+            
+            // 窗口大小变化
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            
+            // 开始按钮事件
+            startButton.addEventListener('click', () => {
+                startMenu.style.opacity = '0';
+                startMenu.style.transform = 'translateY(50px)';
+                
+                // 等待过渡完成后再隐藏
+                setTimeout(() => {
+                    startMenu.style.display = 'none';
+                }, 1000);
+                
+                // 开始动画
+                animate();
+                
+                // 添加初始粒子
+                addParticles(50);
+                
+                // 添加事件监听
+                canvas.addEventListener('click', handleClick);
+                canvas.addEventListener('mousedown', handleMouseDown);
+                document.addEventListener('mouseup', handleMouseUp);
+            });
+            
+            // 点击屏幕开始
+            canvas.addEventListener('click', handleClick);
+            canvas.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mouseup', handleMouseUp);
+            
+            // 初始化
+            addParticles(50); // 初始粒子
+        });
+    </script>
+</body>
+</html>

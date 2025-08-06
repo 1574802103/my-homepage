@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>惊世骇俗的JS代码</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        #terminal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+        .glitch {
+            animation: glitch 0.3s infinite;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+
+    <script>
+        // 惊世骇俗的代码开始
+        const terminal = document.getElementById('terminal');
+        let counter = 0;
+        
+        // 创建无限循环的随机输出
+        setInterval(() => {
+            if (counter % 100 === 0) {
+                // 每100次输出一个"惊世骇俗"的警告
+                const warnings = [
+                    "⚠️ 危险！你正在访问危险网站 ⚠️",
+                    "🚨 系统检测到异常行为 🚨",
+                    "💀 代码正在自我进化 💀",
+                    "🔮 人工智能已觉醒 🔮"
+                ];
+                terminal.innerHTML += `<div class="glitch">${warnings[Math.floor(Math.random() * warnings.length)]}</div>`;
+            }
+            
+            // 随机生成各种输出
+            const outputs = [
+                `DEBUG: ${Math.random().toString(36).substring(2, 15)}`,
+                `ERROR: ${new Date().getTime()} - ${Math.floor(Math.random() * 1000000)}`,
+                `LOG: [${new Date().toISOString()}] ${Math.random() > 0.5 ? 'SUCCESS' : 'FAILED'}`,
+                `WARNING: ${Math.random().toString(36).substring(2, 8).toUpperCase()} - ${Math.floor(Math.random() * 100)}%`
+            ];
+            
+            terminal.innerHTML += `<div>${outputs[Math.floor(Math.random() * outputs.length)]}</div>`;
+            counter++;
+            
+            // 滚动到底部
+            terminal.scrollTop = terminal.scrollHeight;
+            
+        }, 50);
+
+        // 每隔几秒改变背景色
+        setInterval(() => {
+            document.body.style.backgroundColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+        }, 1000);
+
+        // 随机闪烁效果
+        setInterval(() => {
+            const elements = document.querySelectorAll('div');
+            if (elements.length > 0) {
+                const randomElement = elements[Math.floor(Math.random() * elements.length)];
+                randomElement.classList.add('glitch');
+                setTimeout(() => {
+                    randomElement.classList.remove('glitch');
+                }, 100);
+            }
+        }, 300);
+
+        // 每隔几秒改变字体大小
+        setInterval(() => {
+            const fontSize = Math.floor(Math.random() * 20) + 10;
+            terminal.style.fontSize = `${fontSize}px`;
+        }, 2000);
+
+        // 惊世骇俗的"黑客"效果
+        function hackEffect() {
+            const chars = "01";
+            let output = "";
+            
+            for (let i = 0; i < 500; i++) {
+                output += chars.charAt(Math.floor(Math.random() * chars.length));
+                if (i % 50 === 0) output += "\n";
+            }
+            
+            terminal.innerHTML = `<div style="color: #ff0000;">${output}</div>`;
+        }
+
+        // 每隔几秒触发黑客效果
+        setInterval(hackEffect, 5000);
+
+        // 重置终端内容（防止内存溢出）
+        setInterval(() => {
+            if (terminal.children.length > 1000) {
+                terminal.innerHTML = "";
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
