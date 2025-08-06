@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 网页元数据 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 网页标题 -->
+    <title>天炸叼个人主页</title>
+    <!-- 内联样式表，用于科技风格设计 -->
+    <style>
+        /* ====================
+         * 重置默认样式
+         * ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ====================
+         * 页面整体样式
+         * ==================== */
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ====================
+         * 背景粒子效果
+         * ==================== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        /* ====================
+         * 头部样式
+         * ==================== */
+        .header {
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 60px 20px;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 发光边框效果 */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00dbde, #fc00ff, #00dbde, #fc00ff);
+            background-size: 400%;
+            border-radius: 17px;
+            z-index: -1;
+            animation: glowing-border 20s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes glowing-border {
+            0% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 400% 0;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        /* 头像样式 - 科技感圆形头像 */
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #00b4ff;
+            box-shadow: 0 0 20px rgba(0, 180, 255, 0.7);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* 头像悬停效果 - 发光增强 */
+        .avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.9);
+        }
+
+        /* 用户名样式 - 发光文字效果 */
+        .username {
+            margin-top: 25px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 180, 255, 0.8);
+            letter-spacing: 1px;
+        }
+
+        /* ====================
+         * 内容区域样式
+         * ==================== */
+        .main-content {
+            max-width: 800px;
+            margin: 30px auto;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .content {
+            background: rgba(15, 15, 35, 0.7);
+            backdrop-filter: blur(10px);
+            margin: 20px;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 100, 200, 0.3);
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .content:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 内容卡片发光效果 */
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+        }
+
+        /* 内容段落样式 */
+        .content p {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            color: #d1d1d1;
+        }
+
+        .content h3 {
+            margin: 20px 0 30px;
+            font-size: 1.8rem;
+            color: #00b4ff;
+            text-shadow: 0 0 8px rgba(0, 180, 255, 0.5);
+        }
+
+        /* ====================
+         * 动画效果定义
+         * ==================== */
+        /* 数字动画 */
+        .digital-font {
+            font-family: 'Courier New', monospace;
+            color: #00ffea;
+        }
+
+        /* 扫描线效果 */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 180, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 180, 255, 0.8);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* 弹跳动画 */
+        .bounce {
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* 彩虹文字效果 */
+        .rainbow-text {
+            background: linear-gradient(90deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ffff, #0000ff, #8000ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 400% 400%;
+            animation: rainbow 5s ease infinite;
+            font-weight: bold;
+        }
+
+        @keyframes rainbow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* ====================
+         * 底部样式
+         * ==================== */
+        .footer {
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 1rem;
+            color: #a0a0a0;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 100, 200, 0.3);
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            position: relative;
+        }
+
+        /* 链接样式 - 科技蓝配色 */
+        .footer a {
+            color: #00b4ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 10px;
+        }
+
+        /* 链接悬停效果 - 下划线发光 */
+        .footer a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00b4ff;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 5px rgba(0, 180, 255, 0.8);
+        }
+
+        .footer a:hover {
+            color: #00ffea;
+            text-shadow: 0 0 8px rgba(0, 255, 234, 0.7);
+        }
+
+        .footer a:hover::after {
+            width: 100%;
+        }
+
+        /* ====================
+         * 响应式设计
+         * ==================== */
+        @media (max-width: 768px) {
+            /* 在小屏幕设备上的调整 */
+            .header {
+                padding: 40px 15px;
+                margin: 10px;
+            }
+            
+            .username {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 25px 20px;
+                margin: 15px;
+            }
+            
+            .content p {
+                font-size: 1rem;
+            }
+            
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .username {
+                font-size: 1.7rem;
+            }
+            
+            .content h3 {
+                font-size: 1.5rem;
+            }
+            
+            .header {
+                padding: 30px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景粒子效果 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 页面头部：包含头像和用户名 -->
+    <div class="header">
+        <img class="avatar" src="https://img1.baidu.com/it/u=3444230526,1638756362&fm=253&fmt=auto&app=138&f=JPEG?" alt="天炸叼">
+        <h2 class="username">天炸叼</h2>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <!-- 页面主要内容 -->
+        <div class="content">
+            <div class="scan-line"></div>
+            <p>欢迎来到我的个人网站！<span class="bounce">🌟</span></p>
+            <p>这里是我分享<span class="digital-font">技术</span>、<span class="digital-font">生活</span>和<span class="digital-font">创意</span>的地方。</p>
+            <p>我热爱<span class="rainbow-text">编程</span>、<span class="rainbow-text">设计</span>和<span class="rainbow-text">探索新技术</span>。</p>
+            <p>希望你能在这里找到有趣的内容！<span class="bounce">🚀</span></p>
+        </div>
+        
+        <!-- 彩色跳动文字展示区 -->
+        <div class="content">
+            <div class="scan-line"></div>
+            <h3><span class="rainbow-text">有趣的案例分享！</span></h3>
+        </div>
+    </div>
+
+    <!-- 页面底部：版权信息和友情链接 -->
+    <div class="footer">
+        <p>版权所有 © 2025 <span class="digital-font">天炸叼</span></p>
+        <!-- 友情链接在新标签页打开 -->
+        <a href="https://chat.qwen.ai/" target="_blank">友情链接</a>
+    </div>
+
+    <!-- 粒子效果脚本 -->
+    <script>
+        // 创建背景粒子效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 100;
+            const particles = [];
+            
+            // 记录鼠标位置
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            // 监听鼠标移动
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            // 创建粒子
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机粒子大小
+                const size = Math.random() * 5 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // 随机粒子位置
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                
+                // 随机粒子颜色
+                const colors = [
+                    'rgba(0, 200, 255, 0.7)',  // 蓝色
+                    'rgba(128, 0, 255, 0.7)',  // 紫色
+                    'rgba(0, 255, 200, 0.7)',  // 青色
+                    'rgba(255, 0, 128, 0.7)'   // 粉色
+                ];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 10px ${color}`;
+                
+                // 添加粒子到容器
+                particlesContainer.appendChild(particle);
+                
+                // 存储粒子信息
+                particles.push({
+                    element: particle,
+                    x: posX,
+                    y: posY,
+                    originalX: posX,
+                    originalY: posY,
+                    size: size,
+                    speed: Math.random() * 0.05 + 0.01,
+                    angle: Math.random() * Math.PI * 2,
+                    // 粒子自身运动轨迹参数
+                    orbitRadius: Math.random() * 50 + 10,
+                    orbitSpeed: Math.random() * 0.02 + 0.005,
+                    orbitAngle: Math.random() * Math.PI * 2,
+                    // 粒子透明度变化
+                    opacity: Math.random() * 0.5 + 0.3,
+                    opacitySpeed: Math.random() * 0.02 + 0.01,
+                    opacityAngle: Math.random() * Math.PI * 2
+                });
+            }
+            
+            // 粒子动画循环
+            function animateParticles() {
+                particles.forEach(particle => {
+                    // 更新粒子轨道角度
+                    particle.orbitAngle += particle.orbitSpeed;
+                    
+                    // 计算轨道偏移
+                    const orbitX = Math.cos(particle.orbitAngle) * particle.orbitRadius;
+                    const orbitY = Math.sin(particle.orbitAngle) * particle.orbitRadius;
+                    
+                    // 粒子目标位置（轨道位置）
+                    let targetX = particle.originalX + orbitX;
+                    let targetY = particle.originalY + orbitY;
+                    
+                    // 计算粒子与鼠标的距离
+                    const dx = particle.x - mouseX;
+                    const dy = particle.y - mouseY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // 如果鼠标靠近粒子，则产生排斥效果
+                    if (distance < 150) {
+                        const force = (150 - distance) / 50;
+                        const angle = Math.atan2(dy, dx);
+                        
+                        targetX += Math.cos(angle) * force * 20;
+                        targetY += Math.sin(angle) * force * 20;
+                    }
+                    
+                    // 平滑移动到目标位置
+                    particle.x += (targetX - particle.x) * particle.speed;
+                    particle.y += (targetY - particle.y) * particle.speed;
+                    
+                    // 更新粒子透明度（呼吸效果）
+                    particle.opacityAngle += particle.opacitySpeed;
+                    const currentOpacity = 0.3 + Math.abs(Math.sin(particle.opacityAngle)) * 0.7;
+                    particle.element.style.opacity = currentOpacity;
+                    
+                    // 更新粒子位置
+                    particle.element.style.left = `${particle.x}px`;
+                    particle.element.style.top = `${particle.y}px`;
+                });
+                
+                requestAnimationFrame(animateParticles);
+            }
+            
+            // 开始动画循环
+            animateParticles();
+        });
+    </script>
+</body>
+</html>
