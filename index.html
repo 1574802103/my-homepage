@@ -24,6 +24,8 @@
             flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* 背景粒子效果容器 */
@@ -35,6 +37,7 @@
             height: 100%;
             z-index: -1;
             pointer-events: none;
+            will-change: transform;
         }
 
         /* 单个粒子样式 */
@@ -43,6 +46,89 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.5);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            will-change: transform, opacity;
+        }
+
+        /* 鼠标点击动画效果容器 */
+        .click-effect {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 鼠标点击动画波纹效果 */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            animation: rippleEffect 1s forwards;
+        }
+
+        @keyframes rippleEffect {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.8;
+                border-color: #00b4ff;
+                box-shadow: 0 0 10px #00b4ff, 0 0 20px #00b4ff;
+            }
+            100% {
+                width: 60px;
+                height: 60px;
+                opacity: 0;
+                border-color: #fc00ff;
+                box-shadow: 0 0 20px #fc00ff, 0 0 40px #fc00ff;
+            }
+        }
+
+        /* 鼠标点击动画中心点效果 */
+        .click-center {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            box-shadow: 0 0 10px #00dbde, 0 0 20px #fc00ff;
+            animation: centerEffect 1s forwards;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes centerEffect {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* 鼠标点击动画粒子效果 */
+        .click-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #00dbde;
+            box-shadow: 0 0 5px #00dbde, 0 0 10px #fc00ff;
+            animation: particleEffect 1s forwards;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes particleEffect {
+            0% {
+                transform: translate(-50%, -50%) translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
         }
 
         /* 头部样式 */
@@ -51,12 +137,14 @@
             backdrop-filter: blur(10px);
             text-align: center;
             padding: 60px 20px;
-            margin: 20px;
+            margin: 40px; /* 从20px增加到40px */
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
             border: 1px solid rgba(0, 150, 255, 0.2);
             position: relative;
             overflow: hidden;
+            will-change: transform;
+            cursor: pointer;
         }
 
         /* 发光边框动画效果 */
@@ -73,6 +161,7 @@
             z-index: -1;
             animation: glowing-border 20s linear infinite;
             opacity: 0.7;
+            will-change: transform;
         }
 
         @keyframes glowing-border {
@@ -90,6 +179,7 @@
             border: 3px solid #00b4ff;
             box-shadow: 0 0 20px rgba(0, 180, 255, 0.7);
             transition: all 0.3s ease;
+            will-change: transform;
         }
 
         /* 头像悬停效果 */
@@ -110,17 +200,16 @@
 
         /* 主要内容区域 */
         .main-content {
-            max-width: 1200px;
-            margin: 30px auto;
-            width: 100%;
-            padding: 0 20px;
+            margin: 0 20px; /* 修改为与header相同的边距策略 */
+            width: auto;    /* 修改为自动宽度 */
+            padding: 0;
         }
 
         /* 内容卡片样式 */
         .content {
             background: rgba(15, 15, 35, 0.7);
             backdrop-filter: blur(10px);
-            margin: 20px;
+            margin: 40px;     /* 从20px增加到40px */
             padding: 40px 30px;
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 100, 200, 0.3);
@@ -129,6 +218,8 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease;
+            will-change: transform;
+            cursor: pointer;
         }
 
         /* 内容卡片悬停效果 */
@@ -145,6 +236,7 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, #00dbde, #fc00ff);
+            will-change: transform;
         }
 
         /* 内容段落样式 */
@@ -180,6 +272,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
+            will-change: transform;
         }
 
         /* 案例卡片悬停效果 */
@@ -201,6 +294,7 @@
             transform: scaleX(0);
             transition: transform 0.3s ease;
             transform-origin: left;
+            will-change: transform;
         }
 
         .case-card:hover::before {
@@ -243,6 +337,7 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            will-change: transform;
         }
 
         .case-link:hover {
@@ -266,6 +361,7 @@
             background: rgba(0, 180, 255, 0.5);
             box-shadow: 0 0 10px rgba(0, 180, 255, 0.8);
             animation: scan 3s linear infinite;
+            will-change: transform;
         }
 
         @keyframes scan {
@@ -277,6 +373,7 @@
         .bounce {
             display: inline-block;
             animation: bounce 2s infinite;
+            will-change: transform;
         }
 
         @keyframes bounce {
@@ -293,6 +390,7 @@
             background-size: 400% 400%;
             animation: rainbow 5s ease infinite;
             font-weight: bold;
+            will-change: transform;
         }
 
         @keyframes rainbow {
@@ -309,11 +407,12 @@
             padding: 30px 20px;
             font-size: 1rem;
             color: #a0a0a0;
-            margin: 20px;
+            margin: 40px; /* 从20px增加到40px */
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 100, 200, 0.3);
             border: 1px solid rgba(0, 150, 255, 0.2);
             position: relative;
+            cursor: pointer;
         }
 
         /* 底部链接样式 */
@@ -323,6 +422,7 @@
             transition: all 0.3s ease;
             position: relative;
             padding: 5px 10px;
+            will-change: transform;
         }
 
         /* 底部链接下划线效果 */
@@ -336,6 +436,7 @@
             background: #00b4ff;
             transition: width 0.3s ease;
             box-shadow: 0 0 5px rgba(0, 180, 255, 0.8);
+            will-change: transform;
         }
 
         .footer a:hover {
@@ -351,7 +452,7 @@
         @media (max-width: 768px) {
             .header {
                 padding: 40px 15px;
-                margin: 10px;
+                margin: 20px; /* 从10px增加到20px，保持与桌面端相似的比例 */
             }
             
             .username {
@@ -360,7 +461,7 @@
             
             .content {
                 padding: 25px 20px;
-                margin: 15px;
+                margin: 20px; /* 从15px增加到20px */
             }
             
             .content p {
@@ -376,6 +477,11 @@
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 10px;
             }
+            
+            .footer {
+                margin: 20px; /* 从15px增加到20px */
+                padding: 25px 20px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -389,6 +495,17 @@
             
             .header {
                 padding: 30px 10px;
+                margin: 15px; /* 从10px增加到15px */
+            }
+            
+            .content {
+                padding: 20px 15px;
+                margin: 15px; /* 从10px增加到15px */
+            }
+            
+            .footer {
+                padding: 20px 15px;
+                margin: 15px; /* 从10px增加到15px */
             }
             
             .cases-grid {
@@ -427,142 +544,312 @@
     <div class="particles" id="particles"></div>
     
     <!-- 页面头部：包含头像和用户名 -->
-    <div class="header">
+    <div class="header" id="header">
         <img class="avatar" src="https://img1.baidu.com/it/u=3444230526,1638756362&fm=253&fmt=auto&app=138&f=JPEG?" alt="天炸叼">
         <h2 class="username">天炸叼</h2>
     </div>
 
     <!-- 主要内容区域 -->
-    <div class="main-content">
-        <!-- 页面主要内容 -->
-        <div class="content">
-            <div class="scan-line"></div>
-            <p>欢迎来到我的个人网站！<span class="bounce">🌟</span></p>
-            <p>这里是我分享<span class="digital-font">技术</span>、<span class="digital-font">生活</span>和<span class="digital-font">创意</span>的地方。</p>
-            <p>我热爱<span class="rainbow-text">编程</span>、<span class="rainbow-text">设计</span>和<span class="rainbow-text">探索新技术</span>。</p>
-            <p>希望你能在这里找到有趣的内容！<span class="bounce">🚀</span></p>
-        </div>
-        
-        <!-- 案例列表展示区 -->
-        <div class="content">
-            <div class="scan-line"></div>
-            <h3><span class="rainbow-text">有趣的案例分享！</span></h3>
-            <!-- 案例卡片网格 -->
-            <div class="cases-grid">
-                <!-- 案例1: 粒子爆炸艺术 -->
-                <div class="case-card">
-                    <div class="case-icon">✨</div>
-                    <div class="case-title">粒子爆炸艺术</div>
-                    <p>交互式开始菜单特效</p>
-                    <a href="./Case1.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例2: 粒子艺术展示 -->
-                <div class="case-card">
-                    <div class="case-icon">🎨</div>
-                    <div class="case-title">粒子艺术展示</div>
-                    <p>WebGL粒子系统动画</p>
-                    <a href="./Case2.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例3: 惊世骇俗的JavaScript -->
-                <div class="case-card">
-                    <div class="case-icon">💻</div>
-                    <div class="case-title">惊世骇俗JS</div>
-                    <p>JavaScript创意特效</p>
-                    <a href="./Case3.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例4: 惊世骇俗的互动代码 -->
-                <div class="case-card">
-                    <div class="case-icon">🌟</div>
-                    <div class="case-title">互动代码展示</div>
-                    <p>代码雨与黑客效果</p>
-                    <a href="./Case4.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例5: 惊世骇俗的交互体验 -->
-                <div class="case-card">
-                    <div class="case-icon">🌀</div>
-                    <div class="case-title">交互体验</div>
-                    <p>黑客帝国数字雨效果</p>
-                    <a href="./Case5.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例6: 粒子网络 -->
-                <div class="case-card">
-                    <div class="case-icon">🎆</div>
-                    <div class="case-title">粒子网络</div>
-                    <p>基于TailwindCSS的视觉奇观</p>
-                    <a href="./Case6.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例7: 终端模拟器 -->
-                <div class="case-card">
-                    <div class="case-icon">🎮</div>
-                    <div class="case-title">终端模拟器</div>
-                    <p>黑客终端特效展示</p>
-                    <a href="./Case7.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例8: 恶作剧JavaScript代码 -->
-                <div class="case-card">
-                    <div class="case-icon">🔮</div>
-                    <div class="case-title">恶作剧代码</div>
-                    <p>危险JavaScript示例</p>
-                    <a href="./Case8.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例9: 3D旋转特效 -->
-                <div class="case-card">
-                    <div class="case-icon">立方体</div>
-                    <div class="case-title">3D旋转特效</div>
-                    <p>CSS3 3D立方体动画</p>
-                    <a href="./Case9.html" class="case-link" target="_blank">查看案例</a>
-                </div>
-                
-                <!-- 案例10: 惊世骇俗的JS代码 -->
-                <div class="case-card">
-                    <div class="case-icon">⚡</div>
-                    <div class="case-title">惊世骇俗JS代码</div>
-                    <p>终端故障效果展示</p>
-                    <a href="./Case10.html" class="case-link" target="_blank">查看案例</a>
-                </div>
+    <!-- 页面主要内容 -->
+    <div class="content" id="introContent">
+        <div class="scan-line"></div>
+        <p>欢迎来到我的个人网站！<span class="bounce">🌟</span></p>
+        <p>这里是我分享<span class="digital-font">技术</span>、<span class="digital-font">生活</span>和<span class="digital-font">创意</span>的地方。</p>
+        <p>我热爱<span class="rainbow-text">编程</span>、<span class="rainbow-text">设计</span>和<span class="rainbow-text">探索新技术</span>。</p>
+        <p>希望你能在这里找到有趣的内容！<span class="bounce">🚀</span></p>
+    </div>
+    
+    <!-- 案例列表展示区 -->
+    <div class="content" id="casesContent">
+        <div class="scan-line"></div>
+        <h3><span class="rainbow-text">有趣的案例分享！</span></h3>
+        <!-- 案例卡片网格 -->
+        <div class="cases-grid">
+            <!-- 案例1: 粒子爆炸艺术 -->
+            <div class="case-card">
+                <div class="case-icon">✨</div>
+                <div class="case-title">粒子爆炸艺术</div>
+                <p>交互式开始菜单特效</p>
+                <a href="./Case1.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例2: 粒子艺术展示 -->
+            <div class="case-card">
+                <div class="case-icon">🎨</div>
+                <div class="case-title">粒子艺术展示</div>
+                <p>WebGL粒子系统动画</p>
+                <a href="./Case2.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例3: 惊世骇俗的JavaScript -->
+            <div class="case-card">
+                <div class="case-icon">💻</div>
+                <div class="case-title">惊世骇俗JS</div>
+                <p>JavaScript创意特效</p>
+                <a href="./Case3.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例4: 惊世骇俗的互动代码 -->
+            <div class="case-card">
+                <div class="case-icon">🌟</div>
+                <div class="case-title">互动代码展示</div>
+                <p>代码雨与黑客效果</p>
+                <a href="./Case4.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例5: 惊世骇俗的交互体验 -->
+            <div class="case-card">
+                <div class="case-icon">🌀</div>
+                <div class="case-title">交互体验</div>
+                <p>黑客帝国数字雨效果</p>
+                <a href="./Case5.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例6: 粒子网络 -->
+            <div class="case-card">
+                <div class="case-icon">🎆</div>
+                <div class="case-title">粒子网络</div>
+                <p>基于TailwindCSS的视觉奇观</p>
+                <a href="./Case6.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例7: 终端模拟器 -->
+            <div class="case-card">
+                <div class="case-icon">🎮</div>
+                <div class="case-title">终端模拟器</div>
+                <p>黑客终端特效展示</p>
+                <a href="./Case7.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例8: 恶作剧JavaScript代码 -->
+            <div class="case-card">
+                <div class="case-icon">🔮</div>
+                <div class="case-title">恶作剧代码</div>
+                <p>危险JavaScript示例</p>
+                <a href="./Case8.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例9: 3D旋转特效 -->
+            <div class="case-card">
+                <div class="case-icon">立方体</div>
+                <div class="case-title">3D旋转特效</div>
+                <p>CSS3 3D立方体动画</p>
+                <a href="./Case9.html" class="case-link" target="_blank">查看案例</a>
+            </div>
+            
+            <!-- 案例10: 惊世骇俗的JS代码 -->
+            <div class="case-card">
+                <div class="case-icon">⚡</div>
+                <div class="case-title">惊世骇俗JS代码</div>
+                <p>终端故障效果展示</p>
+                <a href="./Case10.html" class="case-link" target="_blank">查看案例</a>
             </div>
         </div>
     </div>
 
     <!-- 页面底部：版权信息和友情链接 -->
-    <div class="footer">
+    <div class="footer" id="footer">
         <p>版权所有 © 2025 <span class="digital-font">天炸叼</span></p>
         <a href="https://chat.qwen.ai/" target="_blank">友情链接</a>
     </div>
 
-    <!-- 粒子效果脚本 -->
     <script>
-        // 创建背景粒子效果
         document.addEventListener('DOMContentLoaded', function() {
+            // 获取粒子容器元素
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 300;
+            
+            // 检测是否为移动设备，用于性能优化
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // 根据设备类型设置粒子数量，移动端减少粒子以提升性能
+            const particleCount = isMobile ? 200 : 300;
             const particles = [];
             
-            // 记录鼠标位置
+            // 记录鼠标/触摸位置，用于粒子交互效果
             let mouseX = 0;
             let mouseY = 0;
             
-            // 监听鼠标移动
+            // 监听鼠标移动事件（桌面端）
             document.addEventListener('mousemove', function(e) {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
             
-            // 创建粒子
+            // 监听触摸移动事件（移动端）
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 0) {
+                    mouseX = e.touches[0].clientX;
+                    mouseY = e.touches[0].clientY;
+                }
+            });
+            
+            // 监听鼠标点击事件生成新粒子（桌面端）
+            document.addEventListener('click', function(e) {
+                createRandomParticles(e.clientX, e.clientY, 5); // 点击时生成5个新粒子
+            });
+            
+            // 监听触摸结束事件生成新粒子（移动端）
+            document.addEventListener('touchend', function(e) {
+                if (e.changedTouches.length > 0) {
+                    createRandomParticles(e.changedTouches[0].clientX, e.changedTouches[0].clientY, 5);
+                }
+            });
+            
+            // 获取指定区域元素
+            const header = document.getElementById('header');
+            const introContent = document.getElementById('introContent');
+            const casesContent = document.getElementById('casesContent');
+            const footer = document.getElementById('footer');
+            
+            // 为指定区域添加点击事件监听器
+            [header, introContent, casesContent, footer].forEach(element => {
+                if (element) {
+                    element.addEventListener('click', function(e) {
+                        // 阻止事件冒泡，避免重复触发
+                        e.stopPropagation();
+                        // 创建点击效果
+                        createClickEffect(e.clientX, e.clientY);
+                    });
+                }
+            });
+            
+            /**
+             * 创建点击效果
+             * @param {number} x - 点击位置的x坐标
+             * @param {number} y - 点击位置的y坐标
+             */
+            function createClickEffect(x, y) {
+                // 创建主效果容器
+                const clickEffect = document.createElement('div');
+                clickEffect.className = 'click-effect';
+                clickEffect.style.left = `${x}px`;
+                clickEffect.style.top = `${y}px`;
+                document.body.appendChild(clickEffect);
+                
+                // 创建中心点效果
+                const center = document.createElement('div');
+                center.className = 'click-center';
+                clickEffect.appendChild(center);
+                
+                // 创建波纹效果
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                clickEffect.appendChild(ripple);
+                
+                // 创建粒子效果
+                createClickParticles(clickEffect, x, y);
+                
+                // 一段时间后移除效果元素
+                setTimeout(() => {
+                    // 清理DOM元素，避免内存泄漏
+                    if (clickEffect.parentNode) {
+                        clickEffect.parentNode.removeChild(clickEffect);
+                    }
+                }, 1000);
+            }
+            
+            /**
+             * 创建点击粒子效果
+             * @param {HTMLElement} container - 粒子容器
+             * @param {number} x - 点击位置的x坐标
+             * @param {number} y - 点击位置的y坐标
+             */
+            function createClickParticles(container, x, y) {
+                // 创建较少数量的粒子（从8个减少到5个）
+                for (let i = 0; i < 5; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'click-particle';
+                    
+                    // 进一步减小随机移动方向和距离范围（从30-80减少到20-50）
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 20 + Math.random() * 30;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    
+                    // 设置自定义属性用于动画
+                    particle.style.setProperty('--tx', `${tx}px`);
+                    particle.style.setProperty('--ty', `${ty}px`);
+                    
+                    // 设置粒子初始位置
+                    particle.style.left = '0px';
+                    particle.style.top = '0px';
+                    
+                    container.appendChild(particle);
+                    
+                    // 粒子动画结束后移除
+                    particle.addEventListener('animationend', function() {
+                        // 清理DOM元素，避免内存泄漏
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, { once: true }); // 使用once选项确保事件只触发一次
+                }
+            }
+            
+            // 创建随机粒子的函数
+            function createRandomParticles(x, y, count) {
+                for (let i = 0; i < count; i++) {
+                    // 创建粒子元素
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // 随机粒子大小
+                    const size = Math.random() * 4 + 1;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    // 设置粒子初始位置（在点击位置附近随机分布）
+                    const posX = x + (Math.random() - 0.5) * 100;
+                    const posY = y + (Math.random() - 0.5) * 100;
+                    particle.style.left = `${posX}px`;
+                    particle.style.top = `${posY}px`;
+                    
+                    // 随机粒子颜色
+                    const colors = [
+                        'rgba(0, 200, 255, 0.9)',  // 蓝色
+                        'rgba(128, 0, 255, 0.9)',  // 紫色
+                        'rgba(0, 255, 200, 0.9)',  // 青色
+                        'rgba(255, 0, 128, 0.9)',  // 粉色
+                        'rgba(255, 255, 0, 0.9)'   // 黄色
+                    ];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.backgroundColor = color;
+                    particle.style.boxShadow = `0 0 15px ${color}`;
+                    
+                    // 添加粒子到容器
+                    particlesContainer.appendChild(particle);
+                    
+                    // 存储粒子信息用于动画计算
+                    particles.push({
+                        element: particle,
+                        x: posX,
+                        y: posY,
+                        originalX: posX,
+                        originalY: posY,
+                        size: size,
+                        speed: Math.random() * 0.05 + 0.02, // 点击生成的粒子移动速度稍快
+                        orbitRadius: Math.random() * 40 + 20,
+                        orbitSpeed: Math.random() * 0.03 + 0.01,
+                        orbitAngle: Math.random() * Math.PI * 2,
+                        opacity: Math.random() * 0.5 + 0.5,
+                        opacitySpeed: Math.random() * 0.03 + 0.01,
+                        opacityAngle: Math.random() * Math.PI * 2,
+                        // 新增属性：粒子生命周期
+                        life: 200, // 粒子存在时间（帧数）
+                        isExploding: true, // 标记为爆炸粒子
+                        explodeSpeed: Math.random() * 2 + 1 // 爆炸速度
+                    });
+                }
+            }
+            
+            // 创建基础粒子
             for (let i = 0; i < particleCount; i++) {
+                // 创建粒子元素
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // 随机粒子大小
-                const size = Math.random() * 5 + 1;
+                // 随机粒子大小（移动端粒子更小以提升性能）
+                const size = Math.random() * (isMobile ? 3 : 5) + 1;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
                 
@@ -586,7 +873,7 @@
                 // 添加粒子到容器
                 particlesContainer.appendChild(particle);
                 
-                // 存储粒子信息
+                // 存储粒子信息用于动画计算
                 particles.push({
                     element: particle,
                     x: posX,
@@ -595,21 +882,40 @@
                     originalY: posY,
                     size: size,
                     speed: Math.random() * 0.05 + 0.01,
-                    angle: Math.random() * Math.PI * 2,
-                    // 粒子自身运动轨迹参数
-                    orbitRadius: Math.random() * 50 + 10,
-                    orbitSpeed: Math.random() * 0.02 + 0.005,
+                    // 移动端降低动画复杂度
+                    orbitRadius: (isMobile ? Math.random() * 30 + 5 : Math.random() * 50 + 10),
+                    orbitSpeed: (isMobile ? Math.random() * 0.01 + 0.002 : Math.random() * 0.02 + 0.005),
                     orbitAngle: Math.random() * Math.PI * 2,
-                    // 粒子透明度变化
+                    // 粒子透明度变化（移动端变化速度更慢以减少计算）
                     opacity: Math.random() * 0.5 + 0.3,
-                    opacitySpeed: Math.random() * 0.02 + 0.01,
+                    opacitySpeed: (isMobile ? Math.random() * 0.01 + 0.005 : Math.random() * 0.02 + 0.01),
                     opacityAngle: Math.random() * Math.PI * 2
                 });
             }
             
-            // 粒子动画循环
+            /**
+             * 粒子动画循环函数
+             * 负责更新所有粒子的位置、透明度等属性
+             */
             function animateParticles() {
-                particles.forEach(particle => {
+                // 使用常规循环替代slice()创建副本，提高性能并减少内存使用
+                for (let i = 0; i < particles.length; i++) {
+                    const particle = particles[i];
+                    
+                    // 处理爆炸粒子的生命周期
+                    if (particle.isExploding) {
+                        particle.life--;
+                        if (particle.life <= 0) {
+                            // 移除粒子
+                            if (particle.element.parentNode) {
+                                particle.element.parentNode.removeChild(particle.element);
+                            }
+                            particles.splice(i, 1);
+                            i--; // 调整索引以适应数组变化
+                            continue;
+                        }
+                    }
+                    
                     // 更新粒子轨道角度
                     particle.orbitAngle += particle.orbitSpeed;
                     
@@ -621,38 +927,47 @@
                     let targetX = particle.originalX + orbitX;
                     let targetY = particle.originalY + orbitY;
                     
-                    // 计算粒子与鼠标的距离
+                    // 计算粒子与鼠标/触摸点的距离
                     const dx = particle.x - mouseX;
                     const dy = particle.y - mouseY;
                     const distance = Math.sqrt(dx * dx + dy * dy);
                     
-                    // 如果鼠标靠近粒子，则产生排斥效果
-                    if (distance < 150) {
-                        const force = (150 - distance) / 50;
+                    // 如果鼠标/触摸点靠近粒子，则产生排斥效果
+                    if (distance < 100) {
+                        const force = (100 - distance) / 50;
                         const angle = Math.atan2(dy, dx);
                         
-                        targetX += Math.cos(angle) * force * 20;
-                        targetY += Math.sin(angle) * force * 20;
+                        targetX += Math.cos(angle) * force * 10;
+                        targetY += Math.sin(angle) * force * 10;
                     }
                     
                     // 平滑移动到目标位置
                     particle.x += (targetX - particle.x) * particle.speed;
                     particle.y += (targetY - particle.y) * particle.speed;
                     
+                    // 如果是爆炸粒子，增加向外扩散效果
+                    if (particle.isExploding) {
+                        particle.x += (particle.x - particle.originalX) * particle.explodeSpeed * 0.01;
+                        particle.y += (particle.y - particle.originalY) * particle.explodeSpeed * 0.01;
+                    }
+                    
                     // 更新粒子透明度（呼吸效果）
                     particle.opacityAngle += particle.opacitySpeed;
-                    const currentOpacity = 0.3 + Math.abs(Math.sin(particle.opacityAngle)) * 0.7;
+                    let currentOpacity = 0.3 + Math.abs(Math.sin(particle.opacityAngle)) * 0.7;
+                    
+                    // 如果是爆炸粒子，透明度随生命周期递减
+                    if (particle.isExploding) {
+                        currentOpacity *= (particle.life / 200);
+                    }
                     particle.element.style.opacity = currentOpacity;
                     
-                    // 更新粒子位置
-                    particle.element.style.left = `${particle.x}px`;
-                    particle.element.style.top = `${particle.y}px`;
-                });
+                    particle.element.style.transform = `translate(${particle.x - particle.originalX}px, ${particle.y - particle.originalY}px)`;
+                }
                 
                 requestAnimationFrame(animateParticles);
             }
             
-            // 开始动画循环
+            // 启动粒子动画
             animateParticles();
         });
     </script>
